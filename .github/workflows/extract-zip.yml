@@ -3,19 +3,31 @@ name: Extract ZIP File
 on:
   push:
     paths:
-      - '*.zip'
+      - '*.zip' # Trigger the workflow when a ZIP file is pushed
 
 jobs:
-  extract:
+  extract_zip:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Unzip file
-      run: unzip '*.zip' -d ./extracted
+      # Step 2: Install unzip (if not already available)
+      - name: Install unzip
+        run: sudo apt-get install unzip
 
-    - name: Push extracted files back to repo
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: "Extracted ZIP file"
+      # Step 3: Unzip the uploaded ZIP file
+      - name: Unzip file
+        run: |
+          for file in *.zip; do
+            unzip "$file" -d extracted_files
+          done
+
+      # Step 4: Commit and push the extracted files back to the repository
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Extracted ZIP file contents"
+          branch: main # Replace with the branch name you are working on
