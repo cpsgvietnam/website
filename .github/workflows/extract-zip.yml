@@ -7,7 +7,7 @@ on:
 
 jobs:
   extract_zip:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Specify the exact version to avoid compatibility issues
 
     steps:
       # Step 1: Checkout the repository
@@ -25,9 +25,9 @@ jobs:
             unzip "$file" -d extracted_files
           done
 
-      # Step 4: Commit and push the extracted files back to the repository
+      # Step 4: Commit and push changes
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Extracted ZIP file contents"
-          branch: main # Replace with the branch name you are working on
+          branch: main # Replace with the branch you are working on
